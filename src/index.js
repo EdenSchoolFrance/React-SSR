@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 require('ignore-styles');
-var Path = require('path');
+var Path    = require('path');
 var program = require('commander');
-var pjson = require('../package.json');
+var pjson   = require('../package.json');
 
 var App;
 
@@ -15,21 +15,22 @@ require('babel-register')({
 program
   .version(pjson.version)
   .arguments('<file>')
+  .option('-p, --port <port>', 'Specify the listen port', parseInt, 3000)
   .action(function (file) {
-    require(Path.resolve(process.cwd(), file));
+    app = require(Path.resolve(process.cwd(), file)).default;
   })
   .parse(process.argv);
 
 
-if (!App) {
+if (!app) {
   console.error('no app given!');
   process.exit(1);
 }
 
 
 // Why don't I need http createServer
-app.listen(PORT, ()=>{
-  console.log(`App listening on port ${PORT}!`);
+app.listen(program.port, ()=>{
+  console.log(`App listening on port ${program.port}!`);
 });
 
 app.on('error', onError);
