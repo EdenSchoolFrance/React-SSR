@@ -8,7 +8,7 @@ var pjson   = require('../package.json');
 var App;
 
 require('babel-register')({
-  ignore: /\/(build|node_modules)\//,
+  ignore: /\/(build|node_modules\/(?!react-ssr))/,
   presets: ['env', 'react-app']
 });
 
