@@ -15,7 +15,7 @@ require('babel-register')({
 program
   .version(pjson.version)
   .arguments('<file>')
-  .option('-p, --port <port>', 'Specify the listen port', parseInt, 3000)
+  .option('-p, --port <port>', 'Specify the listen port', parseInt, process.env.PORT || 3000)
   .action(function (file) {
     app = require(Path.resolve(process.cwd(), file)).default;
   })
