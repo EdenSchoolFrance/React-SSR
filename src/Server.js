@@ -31,14 +31,14 @@ global.window    = window;
 global.navigator = window.navigator;
 
 const sendResponse = (result, req, res) => {
-	const { context: { statusCode } = {}, content } = result;
+	const { context: { statusCode, url } = {}, content } = result;
 
 	if ( statusCode ) {
 		const st = new HTTPStatus(statusCode);
 
 		switch (true) {
-			case st.isRedirection:
-				res.status(st.code).redirect(url);
+			case !!url:
+				res.status(st.isRedirection ? st.code : 302).redirect(url);
 				break;
 			default:
 				res.status(st.code).send(content);
