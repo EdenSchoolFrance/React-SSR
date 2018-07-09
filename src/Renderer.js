@@ -44,7 +44,7 @@ class Renderer extends EventEmitter {
 			return content;
 	  	};
 
-	  	const content = await renderApp();
+	  	const content = await renderApp(undefined, true);
 
 		Object.assign(initMap, { content });
 
