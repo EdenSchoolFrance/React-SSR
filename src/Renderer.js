@@ -27,15 +27,15 @@ class Renderer extends EventEmitter {
 
 	  	const rootComponent = this[_component](initMap);
 
-	  	const renderApp = async (content) => {
+		const renderApp = async (content, forceRender = false) => {
 			const tasks = [];
 
 			this.emit('rendering', initMap, (task) => tasks.push(task));
 
 			if (tasks.length) {
 				await Promise.all(tasks);
-				return renderApp();
-			} else if (!content) {
+				return renderApp(undefined, true);
+			} else if (forceRender) {
 				return await renderApp(renderToStaticMarkup(rootComponent));
 			}
 

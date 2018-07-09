@@ -38,11 +38,15 @@ const sendResponse = (result, req, res) => {
 
 		switch (true) {
 			case !!url:
-				res.status(st.isRedirection ? st.code : 302).redirect(url);
+				res = res.status(st.isRedirection ? st.code : 302);
 				break;
 			default:
-				res.status(st.code).send(content);
+				res = res.status(st.code);
 		}
+	}
+
+	if (url) {
+		res.redirect(url)
 	} else {
 		res.send(content);
 	}
