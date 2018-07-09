@@ -68,11 +68,11 @@ export default class Server extends EventEmitter {
 		return this;
 	}
 
-	prepare = (renderer) => async (path) => {
+	prepare = (renderer) => async (path, req) => {
 		const { buildPath, indexFile = "index.html", rootElement = "root" } = this[_options];
 
 		const [ { content, ...context }, dom ] = await Promise.all([
-			renderer.render(path),
+			renderer.render(path, req),
 			JSDOM.fromFile(Path.resolve(buildPath, indexFile))
 		]);
 
@@ -100,7 +100,7 @@ export default class Server extends EventEmitter {
 
 		var path = (new URL(url, 'http://localhost')).pathname;
 
-		this.prepare(renderer)(path)
+		this.prepare(renderer)(path, req)
 			.then((result) => this.emit('send/result', result, req, res))
 			.catch((error) => this.emit('send/error', error, req, res))
 		;

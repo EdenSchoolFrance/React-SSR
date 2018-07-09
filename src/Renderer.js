@@ -16,10 +16,11 @@ class Renderer extends EventEmitter {
 		return this;
 	}
 
-	render = async (path) => {
+	render = async (path, req) => {
 		const initMap = {
 			path,
-			context: {}
+			context: {},
+			req
 		};
 
 		this.emit('init', initMap);
