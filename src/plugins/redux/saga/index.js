@@ -19,7 +19,7 @@ export default (renderer, rootSaga) => {
 		const { store } = ctx;
 
 		Object.assign(ctx, {
-			sagaTask: store.runSaga(rootSaga)
+			sagaTask: store.runSaga(rootSaga, ctx.req)
 		});
 	});
 
