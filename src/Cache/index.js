@@ -1,8 +1,14 @@
 import { sendError, sendResponse, getPathFromRequest } from './helpers';
 
+const _ttl = Symbol("ttl");
+
 class Cache
 {
 	responses = {};
+
+	constructor ({ ttl = 86400 }) {
+		this[_ttl] = ttl;
+	}
 
 	middleware = (server) => {
 		server
@@ -23,16 +29,33 @@ class Cache
 		}
 	}
 
-	store = async (p, req, res) => {
-		var path = getPathFromRequest(req);
+	store = async (p, req, res) => this.add(this.getPathFromRequest(req), p)
 
-		responses[path] = p
+	fetch = async (path) => this.validate(path) && this.getPromise(this.getPathFromRequest(req));
+
+	add = (path, p) => {
+		responses[path] = {
+			p,
+			date: Date.now()
+		}
 	}
 
-	fetch = async (path) => {
-		var path = getPathFromRequest(req);
+	remove = (path) => delete response[path];
 
-		return responses[path]
+	getPromise = (path) => (responses[path] && responses[path].p);
+
+	getDate = (path) => (responses[path] && responses[path].date) || 0;
+
+	validate = (path) => {
+		const date = this.getDate(path);
+
+		if (!date || (date + this[_ttl] < Date.now())) {
+			this.remove(path);
+
+			return false;
+		}
+
+		return true;
 	}
 }
 
