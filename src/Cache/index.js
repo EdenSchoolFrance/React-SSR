@@ -1,4 +1,4 @@
-import { sendError, sendResponse, getPathFromRequest } from './helpers';
+import { sendError, sendResponse, getPathFromRequest } from '../helpers';
 
 const _ttl = Symbol("ttl");
 
