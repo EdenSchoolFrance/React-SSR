@@ -1,7 +1,6 @@
 import Path 		from 'path';
 import fs 			from 'fs';
 import EventEmitter from 'events';
-import { URL } 		from 'url';
 import assign      	from "lodash/assign";
 import find      	from "lodash/find";
 import every      	from "lodash/every";
