@@ -35,7 +35,10 @@ export default class Server extends EventEmitter {
 
 		this[_options] = options;
 
-		this.on('serve', this.handleResponse);
+		this
+			.on('serve', this.handleResponse)
+			.on('send/result', sendResponse)
+			.on('send/error', sendError);
 	}
 
 	use (plugin, ...args) {
