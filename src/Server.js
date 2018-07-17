@@ -7,12 +7,12 @@ import find      	from "lodash/find";
 import every      	from "lodash/every";
 import serveStatic 	from "serve-static";
 
-import HTTPStatus from 'httpstatus';
 import { Router } from 'express';
 import { JSDOM }  from 'jsdom';
 
+import { sendError, sendResponse, getPathFromRequest } from './helpers';
+
 const _options = Symbol("options");
-const _cache = Symbol("cache");
 
 Path.dirname(require.main.filename);
 
@@ -30,40 +30,13 @@ global.document  = window.document;
 global.window    = window;
 global.navigator = window.navigator;
 
-const sendResponse = (result, req, res) => {
-	const { context: { statusCode, url } = {}, content } = result;
-
-	if ( statusCode ) {
-		const st = new HTTPStatus(statusCode);
-
-		switch (true) {
-			case !!url:
-				res = res.status(st.isRedirection ? st.code : 302);
-				break;
-			default:
-				res = res.status(st.code);
-		}
-	}
-
-	if (url) {
-		res.redirect(url)
-	} else {
-		res.send(content);
-	}
-};
-
-const sendError = (e, req, res) => res.status(500).send(e.message);
-
 export default class Server extends EventEmitter {
 	constructor (options, ...args) {
 		super(...args);
 
 		this[_options] = options;
-		this[_cache] = [];
 
-		this
-			.on('send/result', sendResponse)
-			.on('send/error', sendError);
+		this.on('serve', this.handleResponse);
 	}
 
 	use (plugin, ...args) {
@@ -100,11 +73,13 @@ export default class Server extends EventEmitter {
 	}
 
 	serve = (renderer) => (req, res) => {
-		const { url } = req;
+		const p =  this.prepare(renderer)(getPathFromRequest(req), req);
 
-		var path = (new URL(url, 'http://localhost')).pathname;
+		this.emit('serve', p, req, res);
+	}
 
-		this.prepare(renderer)(path, req)
+	handleResponse = (p, req, res) => {
+		p
 			.then((result) => this.emit('send/result', result, req, res))
 			.catch((error) => this.emit('send/error', error, req, res))
 		;
