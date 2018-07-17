@@ -1,4 +1,5 @@
 import HTTPStatus from 'httpstatus';
+import { URL } 	  from 'url';
 
 export const sendResponse = (result, req, res) => {
 	const { context: { statusCode, url } = {}, content } = result;
