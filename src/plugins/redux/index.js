@@ -11,3 +11,4 @@ export default (renderer, configureStore) => {
 }
 
 export { default as Saga } from './saga';
+export { default as Server } from './server';

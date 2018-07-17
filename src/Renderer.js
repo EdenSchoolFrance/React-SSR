@@ -50,9 +50,7 @@ class Renderer extends EventEmitter {
 
 		this.emit('end', initMap);
 
-		const { context } = initMap;
-
-	  	return { content, path, context };
+	  	return { content, ...initMap };
 	}
 }
 

@@ -57,7 +57,7 @@ export default class Server extends EventEmitter {
 
 	  	document.getElementById(rootElement).innerHTML = content;
 
-	   	this.emit('prepare', { document, JSDOM });
+	   	this.emit('prepare', { document, JSDOM, context });
 
 		const result = { ...context, content: dom.serialize() };
 
