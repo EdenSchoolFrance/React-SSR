@@ -29,9 +29,9 @@ class Cache
 		}
 	}
 
-	store = async (p, req, res) => this.add(this.getPathFromRequest(req), p)
+	store = async (p, req, res) => this.add(getPathFromRequest(req), p)
 
-	fetch = async (path) => this.validate(path) && this.getPromise(this.getPathFromRequest(req));
+	fetch = async (path) => this.validate(path) && this.getPromise(getPathFromRequest(req));
 
 	add = (path, p) => {
 		this[_responses][path] = {
