@@ -75,7 +75,9 @@ export default class Server extends EventEmitter {
 	}
 
 	serve = (renderer) => (req, res) => {
-		const p =  this.prepare(renderer)(getPathFromRequest(req), req);
+		const path = getPathFromRequest(req);
+
+		const p =  this.prepare(renderer)(path, req);
 
 		this.emit('serve', p, req, res);
 	}

@@ -6,7 +6,7 @@ const _responses = Symbol("responses");
 class Cache
 {
 	constructor ({ ttl = 86400 }) {
-		this[_ttl] = ttl;
+		this[_ttl] = parseInt(ttl, 10);
 		this[_responses] = {};
 	}
 
@@ -31,7 +31,7 @@ class Cache
 
 	store = async (p, req, res) => this.add(getPathFromRequest(req), p)
 
-	fetch = async (path) => this.validate(path) && this.getPromise(getPathFromRequest(req));
+	fetch = async (path) => this.validate(path) && this.getPromise(path);
 
 	add = (path, p) => {
 		this[_responses][path] = {
