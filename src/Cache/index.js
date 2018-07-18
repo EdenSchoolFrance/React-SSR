@@ -5,7 +5,7 @@ const _responses = Symbol("responses");
 
 class Cache
 {
-	constructor ({ ttl = 86400 }) {
+	constructor ({ ttl = 86400000 }) {
 		this[_ttl] = parseInt(ttl, 10);
 		this[_responses] = {};
 	}
