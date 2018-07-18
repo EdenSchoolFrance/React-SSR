@@ -21,6 +21,13 @@ class Cache
 				.fetch(path)
 				.then((p) => {
 					if (!!p) {
+						if (!p.then) { // workaround for misteriously auto-resolving promise
+							if (!(p instanceof Error)) {
+								p = Promise.resolve(p);
+							} else {
+								p = Promise.reject(p);
+							}
+						}
 						server.handleResponse(p, req, res);
 					} else {
 						next();
@@ -35,16 +42,16 @@ class Cache
 
 	add = (path, p) => {
 		this[_responses][path] = {
-			p,
+			p: p,
 			date: Date.now()
 		}
 	}
 
 	remove = (path) => delete this[_responses][path];
 
-	getPromise = (path) => (this[_responses][path] && this[_responses][path].p);
+	getPromise = (path) => (!!this[_responses][path] && this[_responses][path].p);
 
-	getDate = (path) => (this[_responses][path] && this[_responses][path].date) || 0;
+	getDate = (path) => (!!this[_responses][path] && this[_responses][path].date) || 0;
 
 	validate = (path) => {
 		const date = this.getDate(path);
