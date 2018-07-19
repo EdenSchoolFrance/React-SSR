@@ -19,8 +19,6 @@ program
 
     var config = require(Path.resolve(process.cwd(), cmd.babelConfigPath));
 
-    console.log(config)
-
     require('babel-register')(config);
 
     app = require(Path.resolve(process.cwd(), file)).default;
